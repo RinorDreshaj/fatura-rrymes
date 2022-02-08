@@ -1,37 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Fatura e rrymes</title>
+    <title>Fatura e rrymes</title>
 
-	<style>
-		#app {
-			display: flex;
-			flex-direction: column;
-			width: 280px;
-			margin: 0 auto;
-		}
-		#app > label {
-			margin-top: 25px;
-		}
-	</style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.11.1/dist/css/uikit.min.css" />
+    <style>
+        #app {
+            padding-top: 25px;
+        }
+    </style>
 </head>
 <body>
 
 
-	<div id="app">
+    <div id="app"  class="uk-container  uk-container-xsmall">
 
-		<label>
-			A1: <input type="number" v-model="A1">
-		</label>
-		<label>
-			A2: <input type="number" v-model="A2">
-		</label>
+        <form>
+            <fieldset class="uk-fieldset">
 
-		<p>Tarifa fikse: <span v-text="tarifa_fikse"></span> Euro</p>
-		<p>NETO: <span v-text="neto.toFixed(2)"></span> Euro</p>
-		<p>TVSH: <span v-text="calculated_vat.toFixed(2)"></span> Euro</p>
-		<p>Pagesa e rrymes eshte: <span v-text="shuma_fatures.toFixed(2)"></span> Euro</p>		
-	</div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-horizontal-text">A1</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="form-horizontal-text" type="number" placeholder="500" v-model="A1">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="form-horizontal-text">A2</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="form-horizontal-text" type="number" placeholder="400" v-model="A2">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+
+        <p>Tarifa fikse: <span v-text="tarifa_fikse"></span> Euro</p>
+        <p>NETO: <span v-text="neto.toFixed(2)"></span> Euro</p>
+        <p>TVSH: <span v-text="calculated_vat.toFixed(2)"></span> Euro</p>
+        <p>Pagesa e rrymes eshte: <span v-text="shuma_fatures.toFixed(2)"></span> Euro</p>      
+    </div>
 
 
 <script src="https://unpkg.com/vue@3.0.11"></script>
@@ -41,40 +51,40 @@
 const app = Vue.createApp({
     data() {
         return {
-        	A1: 0,
-        	A2: 0,
-        	tarifa_fikse: 1.74,
-        	tvsh: 0.08
+            A1: 0,
+            A2: 0,
+            tarifa_fikse: 1.74,
+            tvsh: 0.08
         }
     },
     computed: {
-    	tarifa_energjise() {
-    		const A1 = parseFloat(this.A1);
-    		const A2 = parseFloat(this.A2);
+        tarifa_energjise() {
+            const A1 = parseFloat(this.A1);
+            const A2 = parseFloat(this.A2);
 
-    		const TOTAL_kWh = A1 + A2;
+            const TOTAL_kWh = A1 + A2;
 
-    		if(TOTAL_kWh <= 800) {
-    			return 0.0675 * A1 + 0.0289 * A2
-    		}
+            if(TOTAL_kWh <= 800) {
+                return 0.0675 * A1 + 0.0289 * A2
+            }
 
-    		const a11_price = 0.0675 * ((800 * A1)/TOTAL_kWh);
-    		const a12_price = 0.1252 * (A1-(800 * A1)/TOTAL_kWh);
+            const a11_price = 0.0675 * ((800 * A1)/TOTAL_kWh);
+            const a12_price = 0.1252 * (A1-(800 * A1)/TOTAL_kWh);
 
-    		const a21_price = 0.0289 *((800* A2) / TOTAL_kWh);
-    		const a22_price = 0.059 * (A2-(800 * A2)/ TOTAL_kWh)
+            const a21_price = 0.0289 *((800* A2) / TOTAL_kWh);
+            const a22_price = 0.059 * (A2-(800 * A2)/ TOTAL_kWh)
 
-    		return a11_price + a21_price + a12_price +a22_price;
-    	},
-    	calculated_vat() {
-    		return this.neto * this.tvsh
-    	},
-    	neto() {
-    		return (this.tarifa_fikse + this.tarifa_energjise) || 0
-    	},
-    	shuma_fatures() {
-    		return (this.neto + this.calculated_vat) || 0
-    	}
+            return a11_price + a21_price + a12_price +a22_price;
+        },
+        calculated_vat() {
+            return this.neto * this.tvsh
+        },
+        neto() {
+            return (this.tarifa_fikse + this.tarifa_energjise) || 0
+        },
+        shuma_fatures() {
+            return (this.neto + this.calculated_vat) || 0
+        }
     }
 })
 
